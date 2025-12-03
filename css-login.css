@@ -1,0 +1,41 @@
+/* --- Styles spécifiques à la page de connexion --- */
+
+/* Fond de la page de connexion */
+body {
+    background-color: #f0f0f0; /* Fond clair */
+}
+
+.login-form {
+    background-color: #fff; /* Fond blanc pour le formulaire */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 28px;
+    color: #333;
+}
+
+input {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+button {
+    background-color: #007bff; /* Couleur bleue pour le bouton */
+    border: 1px solid #007bff;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Liens footer */
+.form-footer a {
+    font-size: 14px;
+    color: #888;
+}
+
+.form-footer a:hover {
+    color: #007bff;
+}
