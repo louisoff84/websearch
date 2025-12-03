@@ -2,147 +2,126 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Moteur de recherche interne</title>
+    <title>Moteur de recherche avec mode sombre/clair</title>
     <style>
+        /* Styles généraux */
         body {
             font-family: Arial, sans-serif;
-            background: #f0f0f0;
             margin: 0;
-            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        .container {
-            max-width: 600px;
-            margin: auto;
+        .search-box {
+            text-align: center;
             background: white;
-            padding: 30px;
+            padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
         }
 
         input[type="text"] {
             width: 80%;
             padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #444;
+            border-radius: 25px;
+            border: 2px solid #ccc;
+            font-size: 16px;
         }
 
         button {
-            padding: 10px 15px;
-            background: #4CAF50;
+            padding: 10px 20px;
+            margin-left: 10px;
             border: none;
+            background: #4CAF50;
             color: white;
-            border-radius: 5px;
+            border-radius: 25px;
+            font-size: 16px;
             cursor: pointer;
         }
 
         button:hover {
-            background: #45a049;
+            background: #45A049;
+        }
+
+        /* Mode clair par défaut */
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .search-box {
+            background-color: #fff;
+            color: #333;
         }
 
         .result {
-            background: #eee;
-            padding: 10px;
             margin-top: 10px;
+            padding: 10px;
+            background: #eee;
             border-radius: 5px;
         }
 
-        .history-item {
-            background: #ddd;
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 4px;
-        }
+        /* Mode sombre - Cette section est activée si l'utilisateur préfère un thème sombre */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+                color: #e0e0e0;
+            }
 
-        .clear-btn {
-            background: #d9534f;
-        }
+            .search-box {
+                background-color: #333;
+                color: #e0e0e0;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            }
 
-        .clear-btn:hover {
-            background: #c9302c;
+            .result {
+                background-color: #444;
+                color: #e0e0e0;
+            }
+
+            input[type="text"], button {
+                border: 2px solid #555;
+                background-color: #444;
+                color: #e0e0e0;
+            }
+
+            button:hover {
+                background-color: #666;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Moteur de recherche interne</h1>
-
-    <input id="searchInput" type="text" placeholder="Tape ta recherche...">
-    <button onclick="doSearch()">Rechercher</button>
-
-    <h2>Résultats :</h2>
+<div class="search-box">
+    <h1>Moteur de recherche</h1>
+    <input id="searchInput" type="text" placeholder="Recherche...">
+    <button onclick="search()">Chercher</button>
     <div id="results"></div>
-
-    <h2>Historique :</h2>
-    <div id="history"></div>
-    <button class="clear-btn" onclick="clearHistory()">Vider l'historique</button>
 </div>
 
 <script>
-    // --- Base de données interne à rechercher ---
-    const database = [
-        "pomme",
-        "banane",
-        "ordinateur",
-        "voiture électrique",
-        "javascript",
-        "chat",
-        "chien",
-        "maison",
-        "console de jeux",
-        "intelligence artificielle",
-        "montagne",
-        "océan",
-        "internet",
-        "pizza",
-        "robot"
-    ];
-
-    // Charger l'historique existant au lancement
-    let historyList = JSON.parse(localStorage.getItem("searchHistory")) || [];
-    updateHistoryDisplay();
-
-    // --- Fonction de recherche interne ---
-    function doSearch() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const resultBox = document.getElementById('results');
-        resultBox.innerHTML = "";
-
-        if (query.trim() === "") return;
-
-        // Ajouter à l'historique
-        historyList.unshift(query);
-        localStorage.setItem("searchHistory", JSON.stringify(historyList));
-        updateHistoryDisplay();
-
-        // Chercher dans la fausse base
-        const matches = database.filter(item => item.toLowerCase().includes(query));
-
-        if (matches.length === 0) {
-            resultBox.innerHTML = "<div class='result'>Aucun résultat trouvé.</div>";
-        } else {
-            matches.forEach(item => {
-                resultBox.innerHTML += `<div class='result'>${item}</div>`;
-            });
+    function search() {
+        const query = document.getElementById('searchInput').value;
+        const resultsContainer = document.getElementById('results');
+        if (!query) {
+            resultsContainer.innerHTML = "<div>Veuillez entrer une recherche.</div>";
+            return;
         }
-    }
+        resultsContainer.innerHTML = "<div>Recherche en cours...</div>";
 
-    // --- Historique ---
-    function updateHistoryDisplay() {
-        const historyBox = document.getElementById('history');
-        historyBox.innerHTML = "";
-
-        historyList.slice(0,20).forEach(item => {
-            historyBox.innerHTML += `<div class='history-item'>${item}</div>`;
-        });
-    }
-
-    // --- Supprimer l’historique ---
-    function clearHistory() {
-        historyList = [];
-        localStorage.removeItem("searchHistory");
-        updateHistoryDisplay();
+        // Exemple de résultats fictifs
+        setTimeout(() => {
+            resultsContainer.innerHTML = `
+                <div class="result">Résultat pour : ${query}</div>
+                <div class="result">Autre résultat</div>
+                <div class="result">Encore un autre résultat</div>
+            `;
+        }, 1000);
     }
 </script>
 
