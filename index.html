@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Moteur de recherche</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .search-box {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 350px;
+            padding: 10px;
+            border: 2px solid #555;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45A049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-box">
+        <h1>Moteur de recherche</h1>
+        <form action="https://www.google.com/search" method="GET">
+            <input type="text" name="q" placeholder="Tape ta recherche ici...">
+            <button type="submit">Chercher</button>
+        </form>
+    </div>
+
+</body>
+</html>
