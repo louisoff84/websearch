@@ -2,150 +2,33 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Moteur de recherche avec DuckDuckGo</title>
-    <style>
-        /* Styles généraux */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .search-box {
-            text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-        }
-
-        input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            border-radius: 25px;
-            border: 2px solid #ccc;
-            font-size: 16px;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin-left: 10px;
-            border: none;
-            background: #4CAF50;
-            color: white;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #45A049;
-        }
-
-        .result {
-            margin-top: 10px;
-            padding: 10px;
-            background: #eee;
-            border-radius: 5px;
-        }
-
-        /* Mode sombre - Optionnel */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #121212;
-                color: #e0e0e0;
-            }
-
-            .search-box {
-                background-color: #333;
-                color: #e0e0e0;
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-            }
-
-            .result {
-                background-color: #444;
-                color: #e0e0e0;
-            }
-
-            input[type="text"], button {
-                background-color: #444;
-                color: #e0e0e0;
-                border: 2px solid #555;
-            }
-
-            button:hover {
-                background-color: #666;
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de Connexion</title>
+    <link rel="stylesheet" href="css.css"> <!-- Lien vers le CSS principal -->
+    <link rel="stylesheet" href="css-login.css"> <!-- Lien vers le CSS spécifique à la page de login -->
 </head>
 <body>
-
-<div class="search-box">
-    <h1>Moteur de recherche</h1>
-    <input id="searchInput" type="text" placeholder="Tapez votre recherche...">
-    <button onclick="search()">Chercher</button>
-    <div id="results"></div>
-</div>
-
-<script>
-    function search() {
-        const query = document.getElementById('searchInput').value;
-        const resultsContainer = document.getElementById('results');
-        
-        // Vérifier que l'utilisateur a bien entré une recherche
-        if (!query) {
-            resultsContainer.innerHTML = "<div>Veuillez entrer une recherche.</div>";
-            return;
-        }
-        
-        // Affichage d'un message "Recherche en cours"
-        resultsContainer.innerHTML = "<div>Recherche en cours...</div>";
-
-        // URL de l'API DuckDuckGo
-        const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json`;
-
-        // Faire la requête fetch
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                // Réinitialiser les résultats
-                resultsContainer.innerHTML = '';
-
-                // Vérifier si des résultats sont disponibles
-                if (data.AbstractText) {
-                    resultsContainer.innerHTML = `
-                        <div class="result">
-                            <h3>Réponse instantanée :</h3>
-                            <p>${data.AbstractText}</p>
-                        </div>
-                    `;
-                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                    // Affichage des résultats
-                    data.RelatedTopics.forEach(item => {
-                        const resultElement = document.createElement('div');
-                        resultElement.className = 'result';
-                        resultElement.innerHTML = `
-                            <a href="${item.FirstURL}" target="_blank"><strong>${item.Text}</strong></a>
-                            <p>${item.Result}</p>
-                        `;
-                        resultsContainer.appendChild(resultElement);
-                    });
-                } else {
-                    resultsContainer.innerHTML = '<div>Aucun résultat trouvé</div>';
-                }
-            })
-            .catch(error => {
-                console.error('Erreur de recherche :', error);
-                resultsContainer.innerHTML = '<div>Une erreur est survenue lors de la recherche.</div>';
-            });
-    }
-</script>
-
+    <div class="container">
+        <div class="login-form">
+            <h2>Se connecter</h2>
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" name="username" placeholder="Entrez votre nom d'utilisateur" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Se connecter</button>
+                </div>
+                <div class="form-footer">
+                    <a href="#">Mot de passe oublié ?</a>
+                    <a href="#">Créer un compte</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
