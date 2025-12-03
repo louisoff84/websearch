@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Moteur de recherche avec mode sombre/clair</title>
+    <title>Moteur de recherche avec DuckDuckGo</title>
     <style>
         /* Styles généraux */
         body {
@@ -47,17 +47,6 @@
             background: #45A049;
         }
 
-        /* Mode clair par défaut */
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        .search-box {
-            background-color: #fff;
-            color: #333;
-        }
-
         .result {
             margin-top: 10px;
             padding: 10px;
@@ -65,7 +54,7 @@
             border-radius: 5px;
         }
 
-        /* Mode sombre - Cette section est activée si l'utilisateur préfère un thème sombre */
+        /* Mode sombre - Optionnel */
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: #121212;
@@ -84,9 +73,9 @@
             }
 
             input[type="text"], button {
-                border: 2px solid #555;
                 background-color: #444;
                 color: #e0e0e0;
+                border: 2px solid #555;
             }
 
             button:hover {
@@ -99,7 +88,7 @@
 
 <div class="search-box">
     <h1>Moteur de recherche</h1>
-    <input id="searchInput" type="text" placeholder="Recherche...">
+    <input id="searchInput" type="text" placeholder="Tapez votre recherche...">
     <button onclick="search()">Chercher</button>
     <div id="results"></div>
 </div>
@@ -108,20 +97,53 @@
     function search() {
         const query = document.getElementById('searchInput').value;
         const resultsContainer = document.getElementById('results');
+        
+        // Vérifier que l'utilisateur a bien entré une recherche
         if (!query) {
             resultsContainer.innerHTML = "<div>Veuillez entrer une recherche.</div>";
             return;
         }
+        
+        // Affichage d'un message "Recherche en cours"
         resultsContainer.innerHTML = "<div>Recherche en cours...</div>";
 
-        // Exemple de résultats fictifs
-        setTimeout(() => {
-            resultsContainer.innerHTML = `
-                <div class="result">Résultat pour : ${query}</div>
-                <div class="result">Autre résultat</div>
-                <div class="result">Encore un autre résultat</div>
-            `;
-        }, 1000);
+        // URL de l'API DuckDuckGo
+        const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json`;
+
+        // Faire la requête fetch
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // Réinitialiser les résultats
+                resultsContainer.innerHTML = '';
+
+                // Vérifier si des résultats sont disponibles
+                if (data.AbstractText) {
+                    resultsContainer.innerHTML = `
+                        <div class="result">
+                            <h3>Réponse instantanée :</h3>
+                            <p>${data.AbstractText}</p>
+                        </div>
+                    `;
+                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                    // Affichage des résultats
+                    data.RelatedTopics.forEach(item => {
+                        const resultElement = document.createElement('div');
+                        resultElement.className = 'result';
+                        resultElement.innerHTML = `
+                            <a href="${item.FirstURL}" target="_blank"><strong>${item.Text}</strong></a>
+                            <p>${item.Result}</p>
+                        `;
+                        resultsContainer.appendChild(resultElement);
+                    });
+                } else {
+                    resultsContainer.innerHTML = '<div>Aucun résultat trouvé</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Erreur de recherche :', error);
+                resultsContainer.innerHTML = '<div>Une erreur est survenue lors de la recherche.</div>';
+            });
     }
 </script>
 
